@@ -1,6 +1,24 @@
 # -*- coding: utf-8 -*-
+from os import path
+
 from flask import Flask
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+basedir = path.abspath(path.dirname(__file__))
 
 app = Flask(__name__)
+app.config.update(
+    dict(
+        SECRET_KEY="powerful-secretkey",
+        WTF_CSRF_SECRET_KEY="a-csrf-secret-key",
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + path.join(basedir, "app.db")
+    )
+)
 
-from app import routes
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
+from app import routes, models
