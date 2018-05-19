@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from random import shuffle
 
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db
+from app import db, login
 
 tournaments_users = db.Table(
     "tournaments_users",
@@ -12,7 +13,7 @@ tournaments_users = db.Table(
 )
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -37,6 +38,11 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 class Tournament(db.Model):
