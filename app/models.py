@@ -63,16 +63,17 @@ class Tournament(db.Model):
         self.members.remove(user)
 
     def create_fights(self):
+        status = "1/{0}".format(len(self.members[::2]))
         us1 = self.members[::2]
         us2 = self.members[1::2]
         shuffle(us1), shuffle(us2)
 
         for pair in list(zip(us1, us2)):
-            self.fights.append(Fight(pair[0], pair[1], self.id, "1/{0}".format(len(us1))))
+            self.fights.append(Fight(pair[0], pair[1], self.id, status))
 
     def delete_losers(self):
         status = "1/{0}".format(len(self.members) // 2)
-        last_fights = [f for f in self.fights if f.status == status]
+        last_fights = Fight.query.filter(Fight.tournament_id == self.id, Fight.status == status)
         for fight in last_fights:
             self.members.remove(fight.get_looser())
 
