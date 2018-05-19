@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <script type="text/javascript" src="../static/tetris.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/tetris.css">
+
+    <div class="score">score: <span id="result">0</span></div>
+    <div id="stack">
+        {% for y in range(20) %}
+            <div data-y="{{ y }}" class="line">
+                {% for x in range(10) %}
+                    <div data-x="{{ x }}" class="brick"></div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+        <script>
+            // tell the embed parent frame the height of the content
+            if (window.parent && window.parent.parent){
+                window.parent.parent.postMessage(["resultsFrame", {
+                    height: document.body.getBoundingClientRect().height,
+                    slug: "kFxja"
+                }], "*")
+            }
+        </script>
+{% endblock %}
