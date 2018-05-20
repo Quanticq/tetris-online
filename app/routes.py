@@ -14,6 +14,11 @@ def index():
     return render_template("index.html", users=User.get_top_users(5))
 
 
+@app.route('/leaders')
+def leaders():
+    return render_template("leaders.html", users=User.get_top_users(50))
+
+
 @app.route('/play')
 @login_required
 def play():
