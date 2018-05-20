@@ -4,16 +4,22 @@
     <script type="text/javascript" src="../static/tetris.js"></script>
     <link rel="stylesheet" type="text/css" href="../static/tetris.css">
 
-    <div align="center">
-        <div class="score">score: <span id="result">0</span></div>
-        <div id="stack">
-            {% for y in range(20) %}
-                <div data-y="{{ y }}" class="line">
-                    {% for x in range(10) %}
-                        <div data-x="{{ x }}" class="brick"></div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-2 col-md-offset-5">
+            <div class="score">score: <span id="result">0</span></div>
+            <div id="stack">
+                {% for y in range(20) %}
+                    <div data-y="{{ y }}" class="line">
+                        {% for x in range(10) %}
+                            <div data-x="{{ x }}" class="brick"></div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-3 col-md-offset-2">
+            {% include '_top_users.html' %}
         </div>
     </div>
 

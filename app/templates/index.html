@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    {% if current_user.is_anonymous %}
-        <h1>Hi!</h1>
-    {% else %}
-        <h1>Hi, {{ current_user.name }}!</h1>
-    {% endif %}
-    {% include '_top_users.html' %}
+    <div class="row">
+        <div class="col-md-9">
+            {% if current_user.is_anonymous %}
+                <h1>Hi!</h1>
+            {% else %}
+                <h1>Hi, {{ current_user.name }}!</h1>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            {% include '_top_users.html' %}
+        </div>
+    </div>
 {% endblock %}

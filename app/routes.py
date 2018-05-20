@@ -11,13 +11,13 @@ from app.models import User
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template("index.html", users=User.get_top_users())
+    return render_template("index.html", users=User.get_top_users(5))
 
 
 @app.route('/play')
 @login_required
 def play():
-    return render_template("play.html", title="Free Play")
+    return render_template("play.html", title="Free Play", users=User.get_top_users(5))
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -1,8 +1,12 @@
-<table align="right">
-    <caption>TOP USERS</caption>
-    {% for user in users %}
-        <tr valign="top">
-            <td>{{ user.name }} - {{ user.max_score }}</td>
-        </tr>
-    {% endfor %}
-</table>
+<div class="panel panel-default">
+    <div class="panel-heading">TOP USERS</div>
+
+    <table class="table">
+        {% for user in users %}
+            <tr valign="top">
+                <td>{{ user.name }}</td>
+                <td>{{ user.max_score }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

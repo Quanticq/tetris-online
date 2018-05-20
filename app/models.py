@@ -40,8 +40,8 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     @staticmethod
-    def get_top_users():
-        return User.query.order_by(User.max_score.desc())[:5]
+    def get_top_users(count):
+        return User.query.order_by(User.max_score.desc())[:count]
 
 
 @login.user_loader
