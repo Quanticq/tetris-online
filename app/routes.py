@@ -60,7 +60,7 @@ def register():
 
 @app.route('/set_score', methods=['POST'])
 @login_required
-def translate_text():
+def set_score():
     data = request.json
     if data["from_url"] == "/play":
         current_user.set_score(int(data["score"]))
