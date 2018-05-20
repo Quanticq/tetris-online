@@ -40,8 +40,18 @@ window.onload=function(){
                 if(draw([0,0], 'on', deDraw()) || true)
                     check();
                 if(false === draw([0,0], undefined, now = [Math.floor(Math.random()*fs.split('*').length),0], pos = [4,0])) {
-                    toV = -1;
-                    alert('Your score: '+document.querySelector('#result').innerHTML);
+                    if (toV !== -1) {
+                        toV = -1;
+                        var request = new XMLHttpRequest();
+                        request.open('POST', '/set_score');
+                        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+                        var data = JSON.stringify({
+                            "score": document.querySelector('#result').innerHTML,
+                            "from_url": document.location.pathname
+                        });
+                        request.send(data);
+                        alert('Your score: ' + document.querySelector('#result').innerHTML);
+                    }
                 }
             }
     });

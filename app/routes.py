@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
@@ -56,3 +56,13 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/set_score', methods=['POST'])
+@login_required
+def translate_text():
+    data = request.json
+    if data["from_url"] == "/play":
+        current_user.set_score(int(data["score"]))
+        db.session.commit()
+    return jsonify({})
