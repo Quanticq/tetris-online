@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(120), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     max_score = db.Column(db.Integer, default=0, index=True)
-    tournaments = db.relationship("Tournament", secondary=tournaments_users, back_populates="members")
+    tournaments = db.relationship("Tournament", secondary=tournaments_users, back_populates="members", lazy="dynamic")
 
     def __init__(self, name, password):
         self.name = name
@@ -51,8 +51,8 @@ class Tournament(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(120), index=True, unique=True, nullable=False)
     description = db.Column(db.String(1024))
-    members = db.relationship("User", secondary=tournaments_users, back_populates="tournaments")
-    fights = db.relationship("Fight", back_populates="tournament")
+    members = db.relationship("User", secondary=tournaments_users, back_populates="tournaments", lazy="dynamic")
+    fights = db.relationship("Fight", back_populates="tournament", lazy="dynamic")
 
     def __init__(self, name, description=None):
         self.name = name
@@ -79,7 +79,7 @@ class Tournament(db.Model):
 
     def delete_losers(self):
         status = "1/{0}".format(len(self.members) // 2)
-        last_fights = Fight.query.filter(Fight.tournament_id == self.id, Fight.status == status)
+        last_fights = self.fights.filer_by(status=status).all()
         for fight in last_fights:
             self.members.remove(fight.get_looser())
 
