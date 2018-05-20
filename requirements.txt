@@ -3,4 +3,5 @@ Flask-WTF
 flask-login
 flask-sqlalchemy
 flask-migrate
+flask-bootstrap
 mysql-connector-python

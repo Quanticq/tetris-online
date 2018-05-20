@@ -1,13 +1,13 @@
 #stack {
-    width: 130px;
-    height: 260px;
+    width: 152px;
+    height: 301px;
     border: solid 1px black;
     border-top: 0px;
 }
 
 .brick {
-    width: 11px;
-    height: 11px;
+    width: 15px;
+    height: 15px;
     border: solid 1px gainsboro;
     background: white;
     float: left;
