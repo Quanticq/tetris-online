@@ -1,0 +1,8 @@
+<table align="right">
+    <caption>TOP USERS</caption>
+    {% for user in users %}
+        <tr valign="top">
+            <td>{{ user.name }} - {{ user.max_score }}</td>
+        </tr>
+    {% endfor %}
+</table>

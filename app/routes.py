@@ -11,7 +11,7 @@ from app.models import User
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template("index.html")
+    return render_template("index.html", users=User.get_top_users())
 
 
 @app.route('/play')
