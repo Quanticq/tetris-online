@@ -1,5 +1,5 @@
 window.onload=function(){
-
+    var scores = {0: 0, 1: 100, 2: 300, 3: 700, 4: 1500};
     var fs = "1111:01|01|01|01*011|110:010|011|001*110|011:001|011|010*111|010:01|11|01:010|111:10|11|10*11|11*010|010|011:111|100:11|01|01:001|111*01|01|11:100|111:11|10|10:111|001",
         now = [3,0],
         pos = [4,0];
@@ -21,10 +21,13 @@ window.onload=function(){
         if(document.querySelectorAll('.now').length > 0)
             deDraw(document.querySelector('.now').classList.remove('now'));
     };
+    var cnt_of_lines = 0;
     var check = function() {
         for(var i=0; i < 20; i++)
-            if(document.querySelectorAll('[data-y="' + i + '"] .brick.on').length === 10)
-                return check(roll(i), document.querySelector('#result').innerHTML = Math.floor(document.querySelector('#result').innerHTML) + 10);
+            if(document.querySelectorAll('[data-y="' + i + '"] .brick.on').length === 10) {
+                cnt_of_lines++;
+                return check(roll(i));
+            }
     };
     var roll = function(ln) {
         if(false !== (document.querySelector('[data-y="' + ln + '"]').innerHTML = document.querySelector('[data-y="' + (ln - 1) + '"]').innerHTML) && ln > 1)
@@ -62,7 +65,10 @@ window.onload=function(){
             function() {
                 if(toV >= 0) toF();
             },
-            toV = toV > 0 ? toV - 0.5 : toV);
+            toV = toV > 0 ? toV - 0.5 : toV
+        );
+        document.querySelector('#result').innerHTML = Math.floor(document.querySelector('#result').innerHTML) + scores[cnt_of_lines];
+        cnt_of_lines = 0;
     };
     toF(toV = 500);
 
