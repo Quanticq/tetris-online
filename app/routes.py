@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, SendBattleForm
 from app.models import User, Fight
 
 
@@ -28,10 +28,23 @@ def play():
                            users=User.get_top_users(5))
 
 
-@app.route('/fights')
+@app.route('/fights', methods=['GET', 'POST'])
 @login_required
 def fights():
-    return render_template("fights.html", title="Fights",
+    form = SendBattleForm()
+    if form.validate_on_submit():
+        user = User.query.filter(User.id == form.user_id.data, User.name == form.username.data).first()
+        if user is None:
+            flash('Invalid Username and User ID')
+        elif user == current_user:
+            flash('You CAN NOT battle yourself')
+        else:
+            new_fight = Fight(current_user, user, status="friendly")
+            db.session.add(new_fight)
+            db.session.commit()
+            flash('New fight!')
+        return redirect(url_for('fights'))
+    return render_template("fights.html", title="Fights", form=form,
                            fights=current_user.get_fights("friendly").all())
 
 
