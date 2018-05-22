@@ -4,13 +4,17 @@
     <table class="table">
         {% for user in users %}
             {% if user.id == current_user.id %}
-            <tr class="info">
-                {% else %}
-            <tr>
+                <tr class="info">
+                    {% else %}
+                <tr>
             {% endif %}
-                <td>{{ user.name }}</td>
+            <td>{{ user.name }}</td>
+            {% if scores %}
+                <td>{{ scores[loop.index - 1] }}</td>
+            {% else %}
                 <td>{{ user.max_score }}</td>
-            </tr>
+            {% endif %}
+        </tr>
         {% endfor %}
     </table>
 </div>

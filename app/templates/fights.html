@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="row">
+        <div class="col-md-11">
+            <table class="table">
+                {% for fight in fights %}
+                    {% if fight.is_played(current_user) %}
+                        <tr>
+                    {% else %}
+                        <tr class="warning">
+                        {% endif %}
+                        {% if fight.user1_score == 0 %}
+                            <td>NP</td>
+                        {% elif fight.user1_score < fight.user2_score %}
+                            <td class="danger">LOSE</td>
+                        {% else %}
+                            <td class="success">WIN</td>
+                        {% endif %}
+                        <td>{{ fight.get_users()[0].name }}</td>
+                        <td>{{ fight.user1_score }}</td>
+                        <td>vs.</td>
+                        <td>{{ fight.user2_score }}</td>
+                        <td>{{ fight.get_users()[1].name }}</td>
+                        {% if fight.user2_score  == 0%}
+                            <td>NP</td>
+                        {% elif fight.user1_score > fight.user2_score %}
+                            <td class="danger">LOSE</td>
+                        {% else %}
+                            <td class="success">WIN</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                {% if not fights|length %}
+                    <div class="alert alert-info" role="alert">No fights yet.</div>
+                {% endif %}
+            </table>
+        </div>
+        <div class="col-md-1">
+            {% for fight in fights %}
+                {% if not fight.is_played(current_user) %}
+                    <button type="button" onclick='document.location.href="{{  url_for("play_fight", fid=fight.id)  }}"'>
+                        Battle
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

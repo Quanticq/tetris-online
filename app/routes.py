@@ -1,28 +1,54 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, request, flash, jsonify
+from flask import render_template, redirect, url_for, request, flash, jsonify, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from app.models import User, Fight
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template("index.html", users=User.get_top_users(5))
+    return render_template("index.html",
+                           users=User.get_top_users(5))
 
 
 @app.route('/leaders')
 def leaders():
-    return render_template("leaders.html", users=User.get_top_users(50))
+    return render_template("leaders.html", title="Leadersboard",
+                           users=User.get_top_users(50))
 
 
 @app.route('/play')
 @login_required
 def play():
-    return render_template("play.html", title="Free Play", users=User.get_top_users(5))
+    return render_template("play.html", title="Free Play",
+                           users=User.get_top_users(5))
+
+
+@app.route('/fights')
+@login_required
+def fights():
+    return render_template("fights.html", title="Fights",
+                           fights=current_user.get_fights("friendly").all())
+
+
+@app.route('/fight/<fid>')
+@login_required
+def play_fight(fid):
+    fight = Fight.query.get_or_404(fid)
+    if fight not in current_user.get_new_fights("friendly").all():
+        abort(403)
+    return render_template("play.html", title="Fight-{0}".format(fid),
+                           users=fight.get_users(),
+                           scores=fight.get_scores())
+
+
+@app.route('/tournaments')
+def tournaments():
+    return render_template("index.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -69,5 +95,8 @@ def set_score():
     data = request.json
     if data["from_url"] == "/play":
         current_user.set_score(int(data["score"]))
-        db.session.commit()
+    elif int(data["from_url"].split("/")[2]) in [f.id for f in current_user.get_fights().all()]:
+        Fight.query.get(int(data["from_url"].split("/")[2])).set_score(current_user, data["score"])
+        current_user.set_score(int(data["score"]))
+    db.session.commit()
     return jsonify({})

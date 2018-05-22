@@ -39,6 +39,23 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def get_fights(self, status=None):
+        q = Fight.query.filter(db.or_(Fight.user1_id == self.id, Fight.user2_id == self.id))
+        if status:
+            q = q.filter(Fight.status == status)
+        return q
+
+    def get_new_fights(self, status=None):
+        q = Fight.query.filter(
+            db.or_(
+                db.and_(Fight.user1_id == self.id, Fight.user1_score == 0),
+                db.and_(Fight.user2_id == self.id, Fight.user2_score == 0)
+            )
+        )
+        if status:
+            q = q.filter(Fight.status == status)
+        return q
+
     @staticmethod
     def get_top_users(count):
         return User.query.order_by(User.max_score.desc())[:count]
@@ -128,3 +145,15 @@ class Fight(db.Model):
             return User.query.get(self.user1_id)
         else:
             return User.query.get(self.user2_id)
+
+    def get_users(self):
+        return User.query.get(self.user1_id), User.query.get(self.user2_id)
+
+    def get_scores(self):
+        return self.user1_score, self.user2_score
+
+    def is_played(self, user):
+        if user.id == self.user1_id:
+            return self.user1_score > 0
+        else:
+            return self.user2_score > 0
