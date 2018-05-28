@@ -12,20 +12,20 @@ from app.models import User, Fight
 @app.route('/index')
 def index():
     return render_template("index.html",
-                           users=User.get_top_users(5))
+                           users=User.top_users(5))
 
 
 @app.route('/leaders')
 def leaders():
     return render_template("leaders.html", title="Leadersboard",
-                           users=User.get_top_users(50))
+                           users=User.top_users(50))
 
 
 @app.route('/play')
 @login_required
 def play():
     return render_template("play.html", title="Free Play",
-                           users=User.get_top_users(5))
+                           users=User.top_users(5))
 
 
 @app.route('/fights', methods=['GET', 'POST'])
@@ -45,14 +45,14 @@ def fights():
             flash('New fight!')
         return redirect(url_for('fights'))
     return render_template("fights.html", title="Fights", form=form,
-                           fights=current_user.get_fights("friendly").all())
+                           fights=current_user.fights("friendly").all())
 
 
 @app.route('/fight/<fid>')
 @login_required
 def play_fight(fid):
     fight = Fight.query.get_or_404(fid)
-    if fight not in current_user.get_new_fights("friendly").all():
+    if fight not in current_user.new_fights("friendly").all():
         abort(403)
     return render_template("play.html", title="Fight-{0}".format(fid),
                            users=fight.get_users(),
@@ -108,7 +108,7 @@ def set_score():
     data = request.json
     if data["from_url"] == "/play":
         current_user.set_score(int(data["score"]))
-    elif int(data["from_url"].split("/")[2]) in [f.id for f in current_user.get_fights().all()]:
+    elif int(data["from_url"].split("/")[2]) in [f.id for f in current_user.fights().all()]:
         Fight.query.get(int(data["from_url"].split("/")[2])).set_score(current_user, data["score"])
         current_user.set_score(int(data["score"]))
     db.session.commit()

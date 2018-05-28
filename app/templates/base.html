@@ -27,8 +27,8 @@
                     {% if current_user.is_authenticated %}
                         <li><a href="{{ url_for('play') }}">Play Tetris</a></li>
                         <li><a href="{{ url_for('fights') }}">Fights
-                            {% if current_user.get_new_fights("friendly").all()|length %}
-                                <span class="badge">{{ current_user.get_new_fights("friendly").all()|length }}</span>
+                            {% if current_user.new_fights("friendly").all()|length %}
+                                <span class="badge">{{ current_user.new_fights("friendly").all()|length }}</span>
                             {% endif %}
                         </a></li>
                     {% endif %}

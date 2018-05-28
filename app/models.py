@@ -39,13 +39,13 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def get_fights(self, status=None):
+    def fights(self, status=None):
         q = Fight.query.filter(db.or_(Fight.user1_id == self.id, Fight.user2_id == self.id))
         if status:
             q = q.filter(Fight.status == status)
         return q
 
-    def get_new_fights(self, status=None):
+    def new_fights(self, status=None):
         q = Fight.query.filter(
             db.or_(
                 db.and_(Fight.user1_id == self.id, Fight.user1_score == 0),
@@ -57,7 +57,7 @@ class User(UserMixin, db.Model):
         return q
 
     @staticmethod
-    def get_top_users(count):
+    def top_users(count):
         return User.query.order_by(User.max_score.desc())[:count]
 
 
