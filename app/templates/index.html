@@ -2,14 +2,18 @@
 
 {% block app_content %}
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-4">
             {% if current_user.is_anonymous %}
                 <h1>Hi!</h1>
+                <p>Please <a href="{{ url_for("login") }}">Login</a> or <a href="{{ url_for("register") }}">Register</a> to Play Tetris and send Fights.</p>
             {% else %}
                 <h1>Hi, {{ current_user.name }}!</h1>
+                <p>To play Tetris press the 'Play Tetris' button.</p>
+                <p>To fight friend use 'Fights'. Note you'll need username and user ID of you friend.</p>
+                <p>To see the leadersboard go to 'Leaders'. </p>
             {% endif %}
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-md-offset-5">
             {% include '_leaders.html' %}
         </div>
     </div>
